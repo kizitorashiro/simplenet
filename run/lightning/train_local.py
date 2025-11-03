@@ -2,7 +2,7 @@ import lightning as L
 from utils.utils import torch_seed
 from dataloader.cifar10_loader import get_cifar10_dataloaders
 
-from .lit_saimple_net import LitSimpleNet
+from .lit_simple_net import LitSimpleNet
 
 if __name__ == '__main__':
 
