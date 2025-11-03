@@ -1,6 +1,6 @@
 import torch
 
-def torch_seed(seed=123):
+def torch_seed(seed=456):
   torch.manual_seed(seed)
   torch.cuda.manual_seed(seed)
   torch.backends.cudnn.deteministic = True

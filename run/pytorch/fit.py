@@ -1,12 +1,14 @@
 import numpy as np
 import torch
 
-def fit(net, optimizer, criterion, num_epochs, train_loader, val_loader, device, history):
+def fit(net, config, train_loader, val_loader, device, logger):
+
   from tqdm import tqdm
   
-  base_epochs = len(history)
+  optimizer = torch.optim.Adam(net.parameters(), lr=config['learning_rate'])
+  criterion = torch.nn.CrossEntropyLoss()
 
-  for epoch in range(base_epochs, num_epochs + base_epochs):
+  for epoch in range(0, config['epochs']):
     n_train_acc, n_val_acc = 0, 0
     train_loss, val_loss = 0, 0
     n_train, n_val = 0, 0
@@ -56,17 +58,16 @@ def fit(net, optimizer, criterion, num_epochs, train_loader, val_loader, device,
       val_loss += loss_val.item() * val_batch_size
       n_val_acc += (predicted_val == labels_val).sum().item()
 
+  
+
     train_acc = n_train_acc / n_train
     val_acc = n_val_acc / n_val
 
     avg_train_loss = train_loss / n_train
     avg_val_loss = val_loss / n_val
 
-    print(f'Epoch [{(epoch+1)}/{num_epochs+base_epochs}], loss: {avg_train_loss:.5f} acc: {train_acc:.5f} val_loss: {avg_val_loss:.5f} val_acc: {val_acc:.5f}')
-    item = np.array([epoch+1, avg_train_loss, train_acc, avg_val_loss, val_acc])
-    history = np.vstack((history, item))
+    logger.log({"epoch": epoch+1, "train_loss": avg_train_loss, "train_acc": train_acc, "val_loss": avg_val_loss, "val_acc": val_acc})
 
-  return history
 
   
     
